@@ -1,6 +1,6 @@
 
 # Production
-/build
+build
 node_modules
 
 #  misc
