@@ -5,7 +5,7 @@ const colors = require('colors');
 
 const {productRoutes} = require('./routes/productRoutes');
 const {userRoutes} = require('./routes/userRoutes');
-const {notFound, errorHandler} = require('./middleware/errorMiddleware')
+const {notFound, errorHandler} = require('./middleware/errorMiddleware');
 
 dotenv.config()
 
