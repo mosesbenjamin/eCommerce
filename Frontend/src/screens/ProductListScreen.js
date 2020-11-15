@@ -5,14 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import Paginate from '../components/Paginate';
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
 const ProductList = ({ history, match }) => {
+    const pageNumber = match.params.pageNumber || 1
+
     const dispatch = useDispatch()
 
     const productList = useSelector( state => state.productList )
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
 
     const productDelete = useSelector( state => state.productDelete )
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
@@ -33,9 +36,9 @@ const ProductList = ({ history, match }) => {
         if(successCreate){
             history.push(`/admin/product/${createdProduct._id}/edit`)
         } else {
-            dispatch(listProducts())
+            dispatch(listProducts('', pageNumber))
         }
-    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct])
+    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct, pageNumber])
 
     const deleteHandler = (id) =>{
         if(window.confirm('Are you sure?')){
@@ -64,6 +67,7 @@ const ProductList = ({ history, match }) => {
         {loadingCreate && <Loader />}
         {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
         {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message>: (
+            <>
             <Table striped bordered hover responsive className='table-sm'>
                 <thead>
                     <tr>
@@ -102,7 +106,9 @@ const ProductList = ({ history, match }) => {
                         )
                     })}
                 </tbody>
-            </Table>    
+            </Table> 
+            <Paginate pages={pages} page={page} isAdmin={true}/>
+            </>   
         )}
         </>
     );
